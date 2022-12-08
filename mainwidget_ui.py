@@ -1,17 +1,10 @@
-import os
-import sys
 from pathlib import Path
 
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtWidgets
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QFileDialog, QMenuBar, QWidgetAction
 
-from PyQt6.QtCore import Qt, QCoreApplication
-from PyQt6.QtGui import QPixmap, QImage
-from PyQt6.QtWidgets import QFileDialog, QToolBar, QMessageBox, QInputDialog
-from PyQt6.QtCore import pyqtSlot
-from auto_img_ui import Ui_ImgProcess
-
-
-class Ui_MainWidget(QtWidgets.QMainWindow):
+class Ui_MainWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -40,22 +33,24 @@ class Ui_MainWidget(QtWidgets.QMainWindow):
         MainWidget.setWindowTitle(_translate("MainWidget", "MainWidget"))
         self.pushButton.setText(_translate("MainWidget", "图像处理"))
         self.pushButton_2.setText(_translate("MainWidget", "打开摄像头"))
-        self.pushButton.clicked.connect(self.get_image_path)
 
     def set_slot(self):
-        self.pushButton.triggered.connect(self.get_image_path)
+        # self.pushButton.clicked.connect(self.get_image_path)
+        ...
 
     def get_image_path(self):
         home_dir = str(Path.home())
-        self.fname_list = QFileDialog.getOpenFileNames(
+        fname_list = QFileDialog.getOpenFileNames(
             self,
             'Open file',
             home_dir,
             "Image Files (*.png *.jpg *.bmp *.jpeg)"
         )
-        if self.fname_list[0]:
-            ui = Ui_ImgProcess(self.fname_list[0])
-            ui.show()
+        print(fname_list)
+        if fname_list[0]:
+            return fname_list[0]
+        else:
+            return None
 
     def get_video_path(self):
         home_dir = str(Path.home())
@@ -67,12 +62,3 @@ class Ui_MainWidget(QtWidgets.QMainWindow):
         )
         if fname[0]:
             self.video_path = fname[0]
-
-    # def switchcontroller(self):
-    #     if self.pushButton.clicked():
-    #         Ui_MainWidget.hide()
-    #         Ui_ImgProcess.show() #打开新页面
-    #
-    #     else:
-    #         QMessageBox.critical(self,'文件类型选择错误力' )
-    #         return None
